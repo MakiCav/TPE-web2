@@ -1,5 +1,5 @@
 Integrantes:
-Caviglia Magdalena mahdalenacavigliach@gmail.com - Urban Matias urbanmatias94@gmail.com
+Caviglia Magdalena magdalenacavigliach@gmail.com - Urban Matias urbanmatias94@gmail.com
 
 Tematica del TPE: Estrenos cinematograficos 2023.
 
