@@ -15,12 +15,17 @@ if (function_exists('customPageHeader'))
 
 if (isset($_GET['id'])) {
     $movieID = $_GET['id'];
-
     $db = new PDO('mysql:host=localhost;dbname=db_peliculas;charset=utf8', 'root', '');
     $sentence = $db->prepare("select * FROM estrenos WHERE ID = :id");
     $sentence->bindParam(':id', $movieID, PDO::PARAM_INT);
     $sentence->execute();
     $movie = $sentence->fetch(PDO::FETCH_OBJ);
+    $sentenceActor1 = $db->prepare("select * FROM actores WHERE ID = $movie->ActorID");
+    $sentenceActor2 = $db->prepare("select * FROM actores WHERE ID = $movie->ActorID2");
+    $sentenceActor1->execute();
+    $sentenceActor2->execute();
+    $actor1 = $sentenceActor1->fetch(PDO::FETCH_OBJ);
+    $actor2 = $sentenceActor2->fetch(PDO::FETCH_OBJ);
     if ($movie) {
         echo "<img src='$movie->Imagen'/>";
         echo "<ul class='list-group list-group-flush'>";
@@ -29,8 +34,9 @@ if (isset($_GET['id'])) {
         echo    "<li class='list-group-item'>Director: $movie->Director</li>";
         echo    "<li class='list-group-item'>Duración: $movie->Duracion</li>";
         echo    "<li class='list-group-item'>Fecha de Estreno: $movie->Estreno</li>";
+        echo    "<a href='actor.php?id=$actor1->ID' class='list-group-item'>Actor 1: $actor1->Nombre $actor1->Apellido</a> ";
+        echo    "<a href='actor.php?id=$actor2->ID' class='list-group-item'>Actor 2: $actor2->Nombre $actor2->Apellido</a>";
         echo "</ul>";
-    
     } else {
         echo "Movie not found.";
     }

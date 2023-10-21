@@ -1,0 +1,6 @@
+RewriteEngine On
+RewriteBase /proyectos/TPE-web2/
+
+# Rewrite URLs for clean and semantic structure
+RewriteRule ^movies/(\d+)$ index.php?action=movie&id=$1 [QSA,L]
+RewriteRule ^actors/(\d+)$ index.php?action=actor&id=$1 [QSA,L]

@@ -1,42 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-    <link rel="stylesheet" href="./style.css"/>
-</head>
-<body>
 <?php
-include_once('header.php');
 
-if (function_exists('customPageHeader'))
-    customPageHeader();
+require_once './funciones.php';
+require_once 'routes.php'; // Include the route definitions.
+define('BASE_URL', 'http://localhost/proyectos/TPE-web2/');
 
-function showMovieCards()
-{
-    $db = new PDO('mysql:host=localhost;dbname=db_peliculas;charset=utf8', 'root', '');
-    $sentence = $db->prepare("select * FROM estrenos");
-    $sentence->execute();
-    $movies = $sentence->fetchAll(PDO::FETCH_OBJ);
 
-    echo "<div class='container-main'>";
-    foreach ($movies as $movie) {
-        echo "<div class='card' style='width: 18rem;'>";
-        echo "<img class='card-img-top' src='$movie->Imagen' alt='Card image cap'>";
-        echo "<div class='card-body'>";
-        echo "<h5 class='card-title'>$movie->Titulo</h5>";
-        echo "<p class='card-text'>$movie->Genero</p>";
-        echo "<a href='movie.php?id=$movie->ID' class='btn btn-primary'>Ir a película</a>";
-        echo "</div>";
-        echo "</div>";
-    }
-    echo "</div>";
+
+// Extract the action and ID from the URL if they exist
+$action = 'listar'; // Default action
+$id = null;
+
+if (!empty($_GET['action'])) {
+    $action = $_GET['action'];
 }
 
-showMovieCards();
-?>  
-    
-</body>
-</html>
+if (!empty($_GET['id'])) {
+    $id = $_GET['id'];
+}
+
+$params = explode('/', $action);
+
+// Check if the defined route exists, and if so, route to the appropriate controller action.
+if (array_key_exists($params[0], $routes)) {
+    list($controllerName, $actionName) = explode('@', $routes[$params[0]]);
+    require_once 'controllers/' . $controllerName . '.php'; // Include the controller file.
+    $controller = new $controllerName();
+    $controller->$actionName();
+} else {
+    echo "404 Page Not Found";  
+}
